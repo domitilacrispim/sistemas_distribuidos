@@ -1,0 +1,19 @@
+{
+    "users": [
+        {
+            "crBio": 198654,
+            "name": "Biologo",
+            "password_hash": "$2b$12$o6dQDW55ucQCf67XWfsoiOkg5wvScCbup9q51OVdJFOAraJAuNKZi"
+        },
+        {
+            "crBio": 123456,
+            "name": "Biologo 2",
+            "password_hash": "$2b$12$o6dQDW55ucQCf67XWfsoiOkg5wvScCbup9q51OVdJFOAraJAuNKZi"
+        },
+        {
+            "crBio": 123457,
+            "name": "Biologo 3",
+            "password_hash": "$2b$12$o6dQDW55ucQCf67XWfsoiOkg5wvScCbup9q51OVdJFOAraJAuNKZi"
+        }
+    ]
+}
