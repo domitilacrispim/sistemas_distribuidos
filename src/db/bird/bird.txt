@@ -1,0 +1,14 @@
+{
+    "birds": [
+        {
+            "name": "canarinho",
+            "editing": false,
+            "editor": null
+        },
+        {
+            "name": "arara",
+            "editing": false,
+            "editor": null
+        }
+    ]
+}
