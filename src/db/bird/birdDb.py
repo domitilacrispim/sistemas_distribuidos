@@ -1,16 +1,18 @@
 import json
 import os
 
+FN = os.path.join(os.path.dirname(__file__), 'bird.txt')
+
 
 class BirdDB:
     def getBirds(self):
-        file = open(os.path.dirname(os.path.abspath(__file__)) + "/bird.txt", "r")
+        file = open(FN, "r")
         birds = json.loads(file.read())["birds"]
         file.close()
         return birds
 
     def writeBirds(self, birdList):
-        file = open("bird.txt", "w")
+        file = open(FN, "w")
         file.write(json.dumps({"birds": birdList}))
         file.close()
 
@@ -27,8 +29,10 @@ class BirdDB:
 
     def getBird(self, name):
         birdList = self.getBirds()
-        bird = filter(lambda bird: bird.name == name, birdList)
-        return bird
+        for bird in birdList:
+            if (bird['name'] == name):
+                return bird
+        return None
 
     def getBirdFile(self, name):
         content = ""

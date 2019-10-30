@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0e\x62irdwiki.proto\"\x18\n\x08\x42irdName\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x08\x42irdInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x65\x64iting\x18\x02 \x01(\t\x12\x0e\n\x06\x65\x64itor\x18\x03 \x01(\t\"&\n\x08\x42irdPage\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"\x1d\n\x0c\x43onfirmation\x12\r\n\x05saved\x18\x01 \x01(\x08\x32}\n\x08\x42irdWiki\x12%\n\tlistBirds\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x30\x01\x12\"\n\x08showBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12&\n\x08saveBird\x12\t.BirdPage\x1a\r.Confirmation\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0e\x62irdwiki.proto\"\x18\n\x08\x42irdName\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x08\x42irdInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x65\x64iting\x18\x02 \x01(\x08\x12\x0e\n\x06\x65\x64itor\x18\x03 \x01(\t\"&\n\x08\x42irdPage\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"\x1d\n\x0c\x43onfirmation\x12\r\n\x05saved\x18\x01 \x01(\x08\x32\xa0\x01\n\x08\x42irdWiki\x12%\n\tlistBirds\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x30\x01\x12!\n\x07getBird\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x12\"\n\x08showBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12&\n\x08saveBird\x12\t.BirdPage\x1a\r.Confirmation\"\x00\x62\x06proto3')
 )
 
 
@@ -73,8 +73,8 @@ _BIRDINFO = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='editing', full_name='BirdInfo.editing', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -212,8 +212,8 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=174,
-  serialized_end=299,
+  serialized_start=175,
+  serialized_end=335,
   methods=[
   _descriptor.MethodDescriptor(
     name='listBirds',
@@ -225,9 +225,18 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='getBird',
+    full_name='BirdWiki.getBird',
+    index=1,
+    containing_service=None,
+    input_type=_BIRDNAME,
+    output_type=_BIRDINFO,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='showBird',
     full_name='BirdWiki.showBird',
-    index=1,
+    index=2,
     containing_service=None,
     input_type=_BIRDNAME,
     output_type=_BIRDPAGE,
@@ -236,7 +245,7 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='saveBird',
     full_name='BirdWiki.saveBird',
-    index=2,
+    index=3,
     containing_service=None,
     input_type=_BIRDPAGE,
     output_type=_CONFIRMATION,

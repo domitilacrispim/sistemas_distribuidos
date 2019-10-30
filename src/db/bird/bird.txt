@@ -7,7 +7,7 @@
         },
         {
             "name": "arara",
-            "editing": false,
+            "editing": true,
             "editor": null
         }
     ]

@@ -10,13 +10,8 @@ import loginuser_pb2
 import loginuser_pb2_grpc
 
 from db.user.userDb import UserDB
+from db.bird.birdDb import BirdDB
 import bcrypt
-
-BIRDSONS = [
-    birdwiki_pb2.BirdInfo(name="Sabia", editing="false", editor=""),
-    birdwiki_pb2.BirdInfo(name="Pica-pau", editing="false", editor=""),
-    birdwiki_pb2.BirdInfo(name="Corvo", editing="false", editor="")
-]
 
 BIRDSON = birdwiki_pb2.BirdPage(
     name="Corvo", text="Corvus is a widely distributed genus of medium-sized to large birds in the family Corvidae. The genus includes species commonly known as crows, ravens, rooks and jackdaws;")
@@ -27,9 +22,18 @@ CONF = birdwiki_pb2.Confirmation(saved=True)
 class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
 
     def listBirds(self, request, context):
-        print("REQUEST IS", request)
-        for bird in BIRDSONS:  # TODO: TROCAR BIRDSONS PARA DB
-            yield bird
+        print("REQUEST IS TO LIST BIRD(S)", request)
+        birdList = BirdDB().getBirds()
+        for bird in birdList:
+            yield birdwiki_pb2.BirdInfo(name=bird['name'], editing=bird['editing'], editor=bird['editor'])
+
+    def getBird(self, request, context):
+        print("REQUEST IS TO GET BIRD ", request.name)
+        bird = BirdDB().getBird(request.name)
+
+        if (bird and bird['name']):
+            return birdwiki_pb2.BirdInfo(name=bird['name'], editing=bird['editing'], editor=bird['editor'])
+        return birdwiki_pb2.BirdInfo()
 
     def showBird(self, request, context):
         print("REQUEST IS", request)

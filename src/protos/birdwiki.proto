@@ -12,6 +12,9 @@ service BirdWiki {
     // Se não tiver nome, então liste todas
     rpc listBirds (BirdName) returns (stream BirdInfo) {}
 
+    // Recebe requisição para pegar dados da ave 
+    rpc getBird (BirdName) returns (BirdInfo) {}
+
     // Retorna a página do passarinho informado pelo cliente
     rpc showBird (BirdName) returns (BirdPage) {}
 
@@ -27,7 +30,7 @@ message BirdName {
 // Mensagem que retorna as informações de uma ave
 message BirdInfo {
     string name = 1;
-    string editing = 2;
+    bool editing = 2;
     string editor = 3;
 }
 

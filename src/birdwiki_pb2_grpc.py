@@ -19,6 +19,11 @@ class BirdWikiStub(object):
         request_serializer=birdwiki__pb2.BirdName.SerializeToString,
         response_deserializer=birdwiki__pb2.BirdInfo.FromString,
         )
+    self.getBird = channel.unary_unary(
+        '/BirdWiki/getBird',
+        request_serializer=birdwiki__pb2.BirdName.SerializeToString,
+        response_deserializer=birdwiki__pb2.BirdInfo.FromString,
+        )
     self.showBird = channel.unary_unary(
         '/BirdWiki/showBird',
         request_serializer=birdwiki__pb2.BirdName.SerializeToString,
@@ -43,6 +48,13 @@ class BirdWikiServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def getBird(self, request, context):
+    """Recebe requisição para pegar dados da ave 
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def showBird(self, request, context):
     """Retorna a página do passarinho informado pelo cliente
     """
@@ -62,6 +74,11 @@ def add_BirdWikiServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'listBirds': grpc.unary_stream_rpc_method_handler(
           servicer.listBirds,
+          request_deserializer=birdwiki__pb2.BirdName.FromString,
+          response_serializer=birdwiki__pb2.BirdInfo.SerializeToString,
+      ),
+      'getBird': grpc.unary_unary_rpc_method_handler(
+          servicer.getBird,
           request_deserializer=birdwiki__pb2.BirdName.FromString,
           response_serializer=birdwiki__pb2.BirdInfo.SerializeToString,
       ),
