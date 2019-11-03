@@ -37,11 +37,22 @@ class BirdDB:
     def getBirdFile(self, name):
         content = ""
         birdList = self.getBirds()
-        print(birdList)
         bird = [b for b in birdList if b["name"] == name][0]
-        print(bird, os.path.dirname(os.path.abspath(__file__)) + f"/files/{bird['name']}.txt")
+
         with open(
-            os.path.dirname(os.path.abspath(__file__)) + f"/files/{bird['name']}.txt", "r"
+            os.path.dirname(os.path.abspath(__file__)) + f"/files/{bird['name']}.txt", "r", encoding="utf-8"
         ) as file:
             content = file.read()
+        
         return content
+    
+    def saveBirdFile(self, name, text):
+        try:
+            with open(
+                os.path.dirname(os.path.abspath(__file__)) + f"/files/{name}.txt", "w", encoding="utf-8"
+            ) as file:
+                file.write(text)
+                file.close()
+                return True
+        except:
+            return False

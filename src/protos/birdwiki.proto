@@ -8,41 +8,40 @@ syntax = "proto3";
 // Definição do serviço
 service BirdWiki {
 
-    // Lista as várias aves com base no nome informado pelo cliente
-    // Se não tiver nome, então liste todas
-    rpc listBirds (BirdName) returns (stream BirdInfo) {}
+  // Lista as várias aves com base no nome informado pelo cliente
+  // Se não tiver nome, então liste todas
+  rpc listBirds(BirdName) returns (stream BirdInfo) {}
 
-    // Recebe requisição para pegar dados da ave 
-    rpc getBird (BirdName) returns (BirdInfo) {}
+  // Recebe requisição para pegar dados da ave
+  rpc getBird(BirdName) returns (BirdInfo) {}
 
-    // Retorna a página do passarinho informado pelo cliente
-    rpc showBird (BirdName) returns (BirdPage) {}
+  // Retorna a página do passarinho informado pelo cliente
+  rpc readBird(BirdName) returns (BirdPage) {}
+  
+  // edita a pagina do passaro
+  rpc editBird(BirdName) returns (BirdPage) {}
 
-    // Recebe a página do passarinho
-    rpc saveBird (BirdPage) returns (Confirmation) {}
+  // Recebe a página do passarinho
+  rpc saveBird(BirdPage) returns (Confirmation) {}
 }
 
 // Mensagem que guarda o nome da ave para pesquisa
-message BirdName {
-    string name = 1;
-}
+message BirdName { string name = 1; }
 
 // Mensagem que retorna as informações de uma ave
 message BirdInfo {
-    string name = 1;
-    bool editing = 2;
-    string editor = 3;
+  string name = 1;
+  bool editing = 2;
+  string editor = 3;
 }
 
 // Mensagem que retorna o nome e texto da ave
 // Usada tanto para o servidor retornar a page para uma visualização
 // Ou para o cliente enviar a página para criação/atualização
 message BirdPage {
-    string name = 1;
-    string text = 2;
+  string name = 1;
+  string text = 2;
 }
 
 // Mensagem de confirmação
-message Confirmation {
-    bool saved = 1;
-}
+message Confirmation { bool saved = 1; }

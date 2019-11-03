@@ -10,13 +10,17 @@ import birdwiki_pb2_grpc
 import loginuser_pb2
 import loginuser_pb2_grpc
 
+from classes.editor import EditorWindow
+
+user = ''
 
 # EFETUA LOGIN DE USUARIO
 # FICA EM LOOP ENQUANTO LOGIN FALHA (nome ou senha incorretos)
 # TODO (baixa prioridade): OPÇÂO DE SAIR
 def login(stub):
     print("\n --- LOGIN ---")
-
+    global user
+    
     while(True):
         crBio = input("crBio: ")
         password = input("Senha: ")
@@ -27,6 +31,7 @@ def login(stub):
         if not response.crBio:
             print("Usuário ou senha incorretos. Tente Novamente\n\n")
         else:
+            user = response.crBio
             print("Usuário ", response.name, " logado com sucesso.")
             break
 
@@ -44,8 +49,9 @@ def chooseBird(stub):
             print(bird.name)
 
         # USUARIO ESCOLHE AVE
-        birdName = input("Escolha uma ave para editar: ")
-
+        birdName = input("Escolha uma ave ou digite 0 para sair: ")
+        if(birdName=="0"):
+            raise KeyboardInterrupt
         response = stub.getBird(birdwiki_pb2.BirdName(
             name=birdName))  # PEDE AVE AO SERVIDOR
 
@@ -59,9 +65,9 @@ def chooseBird(stub):
 # EXIBE MENU DE OPÇÔES (ler, escolher outra ou sair) CASO AVE EM EDICAO
 def checkBirdAvailability(stub, bird):
     if bird.editing == True:
-        print("Pássaro já está sendo editado.")
+        print("\nPássaro já está sendo editado.")
         print(
-            "Escolha uma das opcoes: \n[1] Abrir para leitura \n[2] Escolher outra ave \n[0] Sair")
+            "\nEscolha uma das opcoes: \n[1] Abrir para leitura \n[2] Escolher outra ave \n[0] Sair")
         option = int(input())
 
         if option == 1:
@@ -75,20 +81,22 @@ def checkBirdAvailability(stub, bird):
 
 
 # LER DADOS DE UMA AVE
-# TODO: REQUISITAR AO BANCO A LEITURA DA AVE
 def readBird(stub, bird):
-    print("LER AVE ", bird.name)
-    # response = stub.showBird(
-    #     birdwiki_pb2.BirdName(name='test1'))
-    # print("\nINFO DA AVE: ")
-    # print(response.name)
-    # print(response.text)
+    response = stub.readBird(
+        birdwiki_pb2.BirdName(name=bird.name))
+    EditorWindow(response.name, response.text, False).run()
 
 # EDITAR DADOS DE UMA AVE
 # TODO: REQUISITAR AO BANCO A EDIÇÂO DA AVE
 def editBird(stub, bird):
-    print("EDITAR AVE ", bird.name)
-
+    response = stub.editBird(
+        birdwiki_pb2.BirdName(name=bird.name))
+    editor = EditorWindow(response.name, response.text, True)
+    editor.run()
+    response = stub.saveBird(
+        birdwiki_pb2.BirdPage(name=bird.name, text=editor.content)
+    )
+    print(response.saved)
 
 def run():
     with grpc.insecure_channel('localhost:50051') as channel:
@@ -96,16 +104,17 @@ def run():
         login(loginuser_pb2_grpc.LoginUserStub(channel))
 
         while True:
-            time.sleep(1)
             try:
 
                 bird = chooseBird(stub)  # LISTA AS AVES E ESCOLHE UMA
-                checkBirdAvailability(stub, bird) # VERIFICA SE PODE EDITAR AVE ESCOLHIDA
-
-                # # TESTE 2: """"SALVANDO"""" UMA AVE
-                # response = stub.saveBird(
-                #     birdwiki_pb2.BirdPage(name="test2", text=""))
-                # print("\nIS SAVED? ", response.saved)
+                print("Escolha uma das opcoes: \n[1] Abrir para leitura \n[2] Editar \n[0] Sair")
+                option = int(input())
+                if(option==2):
+                    checkBirdAvailability(stub, bird) # VERIFICA SE PODE EDITAR AVE ESCOLHIDA
+                elif(option==1):
+                    readBird(stub, bird)
+                else:
+                    raise KeyboardInterrupt
 
             except KeyboardInterrupt:
                 print("Goodbye")

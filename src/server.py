@@ -1,6 +1,6 @@
 from concurrent import futures
 import logging
-
+import json
 import grpc
 
 import birdwiki_pb2
@@ -9,14 +9,13 @@ import birdwiki_pb2_grpc
 import loginuser_pb2
 import loginuser_pb2_grpc
 
+import systemstate_pb2
+import systemstate_pb2_grpc
+
+from db.system_state.stateDb import StateDB
 from db.user.userDb import UserDB
 from db.bird.birdDb import BirdDB
 import bcrypt
-
-BIRDSON = birdwiki_pb2.BirdPage(
-    name="Corvo", text="Corvus is a widely distributed genus of medium-sized to large birds in the family Corvidae. The genus includes species commonly known as crows, ravens, rooks and jackdaws;")
-
-CONF = birdwiki_pb2.Confirmation(saved=True)
 
 
 class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
@@ -35,14 +34,24 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
             return birdwiki_pb2.BirdInfo(name=bird['name'], editing=bird['editing'], editor=bird['editor'])
         return birdwiki_pb2.BirdInfo()
 
-    def showBird(self, request, context):
-        print("REQUEST IS", request)
-        return BIRDSON
+    def readBird(self, request, context):
+        print("REQUEST IS TO READ ", request.name)
+        content = BirdDB().getBirdFile(request.name)
+        if (content):
+            return birdwiki_pb2.BirdPage(name=request.name, text=content)
+        return birdwiki_pb2.BirdPage()
 
     def saveBird(self, request, context):
-        print("REQUEST IS", request)
-        return CONF
-
+        print("REQUEST IS TO SAVE ", request.name)
+        result = BirdDB().saveBirdFile(request.name, request.text)
+        return birdwiki_pb2.Confirmation(saved=result)
+    
+    def editBird (self, request, context):
+        print("REQUEST IS TO EDIT ", request.name)
+        content = BirdDB().getBirdFile(request.name)
+        if (content):
+            return birdwiki_pb2.BirdPage(name=request.name, text=content)
+        return birdwiki_pb2.BirdPage()
 
 class LoginUserServer(loginuser_pb2_grpc.LoginUserServicer):
 
@@ -60,12 +69,16 @@ class LoginUserServer(loginuser_pb2_grpc.LoginUserServicer):
 
         return loginuser_pb2.UserInfo()
 
+class SystemStateServer(systemstate_pb2_grpc.SystemStateServicer):
+    def saveState(self, request, context):
+       #TODO salvar estado no banco
+       print("REQUEST IS TO SAVE STATE")
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     birdwiki_pb2_grpc.add_BirdWikiServicer_to_server(BirdWikiServer(), server)
-    loginuser_pb2_grpc.add_LoginUserServicer_to_server(
-        LoginUserServer(), server)
+    loginuser_pb2_grpc.add_LoginUserServicer_to_server(LoginUserServer(), server)
+    systemstate_pb2_grpc.add_SystemStateServicer_to_server(SystemStateServer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()

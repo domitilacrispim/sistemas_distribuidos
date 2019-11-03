@@ -9,6 +9,36 @@
             "name": "arara",
             "editing": true,
             "editor": null
+        },
+        {
+            "name": "agapornis",
+            "editing": false,
+            "editor": null
+        },
+        {
+            "name": "avestruz",
+            "editing": false,
+            "editor": null
+        },
+        {
+            "name": "calopsita",
+            "editing": false,
+            "editor": null
+        },
+        {
+            "name": "papagaio",
+            "editing": false,
+            "editor": null
+        },
+        {
+            "name": "pombo",
+            "editing": false,
+            "editor": null
+        },
+        {
+            "name": "sabia",
+            "editing": false,
+            "editor": null
         }
     ]
 }

@@ -1,0 +1,22 @@
+/*
+    PARA COMPILAR USE O COMANDO (NA PASTA src)
+    python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/systemstate.proto
+*/
+
+syntax = "proto3";
+
+// Definição do serviço
+service SystemState {
+  // Recebe a página do passarinho
+  rpc saveState(StateInfo) returns (StateConfirmation) {}
+}
+
+// Mensagem que retorna as informações do estado
+message StateInfo {
+  string crBio = 1;
+  string bird = 2;
+  bool editing = 3;
+}
+
+// Mensagem de confirmação
+message StateConfirmation { bool saved = 1; }
