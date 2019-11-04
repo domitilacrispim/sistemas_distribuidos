@@ -1,5 +1,5 @@
 /*
-    PARA COMPILAR USE O COMANDO (NA PASTA src/grpc)
+    PARA COMPILAR USE O COMANDO (NA PASTA src/grpcFiles)
     python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/loginuser.proto
     
     NO ARQUIVO loginuser_pb2_grpc MUDE A LINHA 4 PARA 
