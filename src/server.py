@@ -41,17 +41,22 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
             return birdwiki_pb2.BirdPage(name=request.name, text=content)
         return birdwiki_pb2.BirdPage()
 
+    def editBird (self, request, context):
+        print("REQUEST IS TO EDIT ", request.name)
+        changeEdit = BirdDB().updateBird(request.name, True)
+        
+        if (changeEdit == True): 
+            content = BirdDB().getBirdFile(request.name)
+            if (content):
+                return birdwiki_pb2.BirdPage(name=request.name, text=content)
+        return birdwiki_pb2.BirdPage()
+
     def saveBird(self, request, context):
         print("REQUEST IS TO SAVE ", request.name)
+        changeEdit = BirdDB().updateBird(request.name, False)
         result = BirdDB().saveBirdFile(request.name, request.text)
         return birdwiki_pb2.Confirmation(saved=result)
     
-    def editBird (self, request, context):
-        print("REQUEST IS TO EDIT ", request.name)
-        content = BirdDB().getBirdFile(request.name)
-        if (content):
-            return birdwiki_pb2.BirdPage(name=request.name, text=content)
-        return birdwiki_pb2.BirdPage()
 
 class LoginUserServer(loginuser_pb2_grpc.LoginUserServicer):
 

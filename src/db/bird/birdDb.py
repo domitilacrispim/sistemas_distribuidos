@@ -34,6 +34,15 @@ class BirdDB:
                 return bird
         return None
 
+    def updateBird(self, name, editing):
+        birdList = self.getBirds()
+        for bird in birdList:
+            if (bird['name'] == name):
+                bird['editing'] = editing
+                self.writeBirds(birdList)
+                return True
+        return False
+
     def getBirdFile(self, name):
         content = ""
         birdList = self.getBirds()
