@@ -4,11 +4,11 @@ import time
 
 import grpc
 
-import birdwiki_pb2
-import birdwiki_pb2_grpc
+from grpcFiles import birdwiki_pb2
+from grpcFiles import birdwiki_pb2_grpc
 
-import loginuser_pb2
-import loginuser_pb2_grpc
+from grpcFiles import loginuser_pb2
+from grpcFiles import loginuser_pb2_grpc
 
 from classes.editor import EditorWindow
 
@@ -17,10 +17,12 @@ user = ''
 # EFETUA LOGIN DE USUARIO
 # FICA EM LOOP ENQUANTO LOGIN FALHA (nome ou senha incorretos)
 # TODO (baixa prioridade): OPÇÂO DE SAIR
+
+
 def login(stub):
     print("\n --- LOGIN ---")
     global user
-    
+
     while(True):
         crBio = input("crBio: ")
         password = input("Senha: ")
@@ -37,6 +39,8 @@ def login(stub):
 
 # LISTAGEM E ESCOLHA DE AVE
 # FICA EM LOOP ENQUANTO NOME INFORMADO FOR INVALIDO
+
+
 def chooseBird(stub):
     print("\n --- ESCOLHA UMA AVE ---")
 
@@ -50,7 +54,7 @@ def chooseBird(stub):
 
         # USUARIO ESCOLHE AVE
         birdName = input("Escolha uma ave ou digite 0 para sair: ")
-        if(birdName=="0"):
+        if(birdName == "0"):
             raise KeyboardInterrupt
         response = stub.getBird(birdwiki_pb2.BirdName(
             name=birdName))  # PEDE AVE AO SERVIDOR
@@ -88,6 +92,8 @@ def readBird(stub, bird):
 
 # EDITAR DADOS DE UMA AVE
 # TODO: REQUISITAR AO BANCO A EDIÇÂO DA AVE
+
+
 def editBird(stub, bird):
     response = stub.editBird(
         birdwiki_pb2.BirdName(name=bird.name))
@@ -98,6 +104,7 @@ def editBird(stub, bird):
     )
     print(response.saved)
 
+
 def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
@@ -107,11 +114,13 @@ def run():
             try:
 
                 bird = chooseBird(stub)  # LISTA AS AVES E ESCOLHE UMA
-                print("Escolha uma das opcoes: \n[1] Abrir para leitura \n[2] Editar \n[0] Sair")
+                print(
+                    "Escolha uma das opcoes: \n[1] Abrir para leitura \n[2] Editar \n[0] Sair")
                 option = int(input())
-                if(option==2):
-                    checkBirdAvailability(stub, bird) # VERIFICA SE PODE EDITAR AVE ESCOLHIDA
-                elif(option==1):
+                if(option == 2):
+                    # VERIFICA SE PODE EDITAR AVE ESCOLHIDA
+                    checkBirdAvailability(stub, bird)
+                elif(option == 1):
                     readBird(stub, bird)
                 else:
                     raise KeyboardInterrupt

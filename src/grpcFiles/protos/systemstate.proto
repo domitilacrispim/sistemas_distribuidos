@@ -1,13 +1,16 @@
 /*
-    PARA COMPILAR USE O COMANDO (NA PASTA src)
+    PARA COMPILAR USE O COMANDO (NA PASTA src/grpc)
     python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/systemstate.proto
+    
+    NO ARQUIVO systemstate_pb2_grpc MUDE A LINHA 4 PARA 
+      from grpcFiles import systemstate_pb2 as systemstate__pb2  
 */
 
 syntax = "proto3";
 
 // Definição do serviço
 service SystemState {
-  // Recebe a página do passarinho
+  
   rpc saveState(StateInfo) returns (StateConfirmation) {}
 }
 

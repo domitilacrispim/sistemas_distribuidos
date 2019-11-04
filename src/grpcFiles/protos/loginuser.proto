@@ -1,6 +1,9 @@
 /*
-    PARA COMPILAR USE O COMANDO (NA PASTA src)
-    python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/loginuser.proto    
+    PARA COMPILAR USE O COMANDO (NA PASTA src/grpc)
+    python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/loginuser.proto
+    
+    NO ARQUIVO loginuser_pb2_grpc MUDE A LINHA 4 PARA 
+      from grpcFiles import loginuser_pb2 as loginuser__pb2  
 */
 
 syntax = "proto3";
