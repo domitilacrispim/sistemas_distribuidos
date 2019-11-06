@@ -2,12 +2,12 @@ from grpcFiles import birdwiki_pb2
 from grpcFiles import birdwiki_pb2_grpc
 from db.bird.birdDb import BirdDB
 
-
 class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
 
     def listBirds(self, request, context):
-        print("REQUEST IS TO LIST BIRD(S)", request)
+        self.log.write(f'REQUEST IS TO LIST BIRD(S) {context.peer()}')
         birdList = BirdDB().getBirds()
+
         for bird in birdList:
             yield birdwiki_pb2.BirdInfo(name=bird['name'], editing=bird['editing'], editor=bird['editor'])
 

@@ -3,7 +3,7 @@ from tkinter.filedialog import asksaveasfilename
 
 class EditorWindow:
     def __init__(self, name, text, edit):
-        self.root = tk.Tk("Text Editor")
+        self.root = tk.Tk()
         self.name = name
         self.content = text
         self.edit = edit
