@@ -14,11 +14,16 @@ from classes.serverState import endState
 
 def serve():
     try:
+        server_id = int(input("Server ID:"))
+        server_port = 5000 + server_id
+
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        birdwiki_pb2_grpc.add_BirdWikiServicer_to_server(BirdWikiServer(), server)
-        loginuser_pb2_grpc.add_LoginUserServicer_to_server(LoginUserServer(), server)
-    
-        server.add_insecure_port('[::]:50051')
+        birdwiki_pb2_grpc.add_BirdWikiServicer_to_server(
+            BirdWikiServer(server_id), server)
+        loginuser_pb2_grpc.add_LoginUserServicer_to_server(
+            LoginUserServer(), server)
+
+        server.add_insecure_port('[::]:' + str(server_port))
         server.start()
         server.wait_for_termination()
     except KeyboardInterrupt:
