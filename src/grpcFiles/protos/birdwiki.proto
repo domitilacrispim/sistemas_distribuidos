@@ -36,6 +36,7 @@ message BirdInfo {
   string name = 1;
   bool editing = 2;
   string editor = 3;
+  string text = 4;
 }
 
 // Mensagem que retorna o nome e texto da ave

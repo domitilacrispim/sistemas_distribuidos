@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter.filedialog import asksaveasfilename
 
+
 class EditorWindow:
     def __init__(self, name, text, edit):
         self.root = tk.Tk()
@@ -19,9 +20,9 @@ class EditorWindow:
             self.root.destroy()
 
         if (self.edit == True):
-            button = tk.Button(self.root, text = "Salvar", command = saveas)
+            button = tk.Button(self.root, text="Salvar", command=saveas)
             button.grid()
         else:
-            self.text.config(state = tk.DISABLED)
-        
+            self.text.config(state=tk.DISABLED)
+
         self.root.mainloop()
