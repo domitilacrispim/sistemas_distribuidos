@@ -35,7 +35,6 @@ message BirdName { string name = 1; }
 message BirdInfo {
   string name = 1;
   bool editing = 2;
-  string editor = 3;
   string text = 4;
 }
 

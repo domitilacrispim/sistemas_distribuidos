@@ -85,16 +85,20 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
     def listBirds(self, request, context):
         print("REQUEST IS TO LIST BIRD(S)", request)
         birdList = getBirds()
-        for bird in birdList:
-            yield birdwiki_pb2.BirdInfo(name=bird['name'], editing=bird['editing'], editor=bird['editor'], text=bird['text'])
+        for birdKey in birdList:
+            bird = birdList[birdKey]
+            yield birdwiki_pb2.BirdInfo(name=bird['name'],
+                                        editing=bird['editing'],
+                                        text=bird['text'])
 
     def getBird(self, request, context):
         print("REQUEST IS TO GET BIRD ", request.name)
         if (checkServer(request.name)):
             bird = getBird(request.name)
-
             if (bird and bird['name']):
-                return birdwiki_pb2.BirdInfo(name=bird['name'], editing=bird['editing'], editor=bird['editor'], text=bird['text'])
+                return birdwiki_pb2.BirdInfo(name=bird['name'],
+                                             editing=bird['editing'],
+                                             text=bird['text'])
             return birdwiki_pb2.BirdInfo()
         else:
             return get_server_request(request.name, self.neighbours)

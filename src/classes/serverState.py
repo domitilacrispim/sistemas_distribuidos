@@ -58,7 +58,7 @@ def saveBird(name, text):
     logging.debug('{"name": "' + name + '", "text": "' + text + '"},')
     global state
     try:
-        bird = [b for b in state.birds if b["name"] == name][0]
+        bird = state.birds[name]
         bird['text'] = text
         return True
     except:
@@ -67,7 +67,7 @@ def saveBird(name, text):
 
 def getBird(name):
     global state
-    bird = [b for b in state.birds if b["name"] == name][0]
+    bird = state.birds[name]
     return bird
 
 
@@ -78,7 +78,7 @@ def getBirds():
 
 def updateBird(name, editing):
     try:
-        bird = [b for b in state.birds if b["name"] == name][0]
+        bird = state.birds[name]
         bird["editing"] = editing
         return True
     except:
@@ -189,8 +189,8 @@ def executeLog():
         for log in edit_log:
             try:
                 log_dict = json.loads(log)
-                bird = [b for b in state.birds if b["name"]
-                        == log_dict['name']][0]
+                birdName = log_dict['name']
+                bird = state.birds[birdName]
                 bird['text'] = log_dict['text']
             except:
                 pass
