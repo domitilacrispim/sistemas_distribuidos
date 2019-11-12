@@ -20,10 +20,41 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0e\x62irdwiki.proto\"\x18\n\x08\x42irdName\x12\x0c\n\x04name\x18\x01 \x01(\t\"7\n\x08\x42irdInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x65\x64iting\x18\x02 \x01(\x08\x12\x0c\n\x04text\x18\x04 \x01(\t\"&\n\x08\x42irdPage\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"\x1d\n\x0c\x43onfirmation\x12\r\n\x05saved\x18\x01 \x01(\x08\">\n\x08UserInfo\x12\r\n\x05\x63rBio\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x15\n\rpassword_hash\x18\x03 \x01(\t\",\n\tUserLogin\x12\r\n\x05\x63rBio\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t2\xc4\x01\n\x08\x42irdWiki\x12%\n\tlistBirds\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x30\x01\x12!\n\x07getBird\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x12\"\n\x08readBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12\"\n\x08\x65\x64itBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12&\n\x08saveBird\x12\t.BirdPage\x1a\r.Confirmation\"\x00\x32-\n\tLoginUser\x12 \n\x05login\x12\n.UserLogin\x1a\t.UserInfo\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0e\x62irdwiki.proto\"\x1e\n\nServerInfo\x12\x10\n\x08serverId\x18\x01 \x01(\x05\"\x18\n\x08\x42irdName\x12\x0c\n\x04name\x18\x01 \x01(\t\"7\n\x08\x42irdInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x65\x64iting\x18\x02 \x01(\x08\x12\x0c\n\x04text\x18\x04 \x01(\t\"&\n\x08\x42irdPage\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"\x1c\n\x0c\x43onfirmation\x12\x0c\n\x04\x66lag\x18\x01 \x01(\x08\">\n\x08UserInfo\x12\r\n\x05\x63rBio\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x15\n\rpassword_hash\x18\x03 \x01(\t\",\n\tUserLogin\x12\r\n\x05\x63rBio\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t2\xbe\x02\n\x08\x42irdWiki\x12(\n\x08greeting\x12\x0b.ServerInfo\x1a\r.Confirmation\"\x00\x12%\n\tlistBirds\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x30\x01\x12!\n\x07getBird\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x12$\n\ncreateBird\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x12\"\n\x08readBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12\"\n\x08\x65\x64itBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12&\n\x08saveBird\x12\t.BirdPage\x1a\r.Confirmation\"\x00\x12(\n\ndeleteBird\x12\t.BirdName\x1a\r.Confirmation\"\x00\x32-\n\tLoginUser\x12 \n\x05login\x12\n.UserLogin\x1a\t.UserInfo\"\x00\x62\x06proto3')
 )
 
 
+
+
+_SERVERINFO = _descriptor.Descriptor(
+  name='ServerInfo',
+  full_name='ServerInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='serverId', full_name='ServerInfo.serverId', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=18,
+  serialized_end=48,
+)
 
 
 _BIRDNAME = _descriptor.Descriptor(
@@ -52,8 +83,8 @@ _BIRDNAME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=18,
-  serialized_end=42,
+  serialized_start=50,
+  serialized_end=74,
 )
 
 
@@ -97,8 +128,8 @@ _BIRDINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=44,
-  serialized_end=99,
+  serialized_start=76,
+  serialized_end=131,
 )
 
 
@@ -135,8 +166,8 @@ _BIRDPAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=101,
-  serialized_end=139,
+  serialized_start=133,
+  serialized_end=171,
 )
 
 
@@ -148,7 +179,7 @@ _CONFIRMATION = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='saved', full_name='Confirmation.saved', index=0,
+      name='flag', full_name='Confirmation.flag', index=0,
       number=1, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -166,8 +197,8 @@ _CONFIRMATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=141,
-  serialized_end=170,
+  serialized_start=173,
+  serialized_end=201,
 )
 
 
@@ -211,8 +242,8 @@ _USERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=172,
-  serialized_end=234,
+  serialized_start=203,
+  serialized_end=265,
 )
 
 
@@ -249,10 +280,11 @@ _USERLOGIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=236,
-  serialized_end=280,
+  serialized_start=267,
+  serialized_end=311,
 )
 
+DESCRIPTOR.message_types_by_name['ServerInfo'] = _SERVERINFO
 DESCRIPTOR.message_types_by_name['BirdName'] = _BIRDNAME
 DESCRIPTOR.message_types_by_name['BirdInfo'] = _BIRDINFO
 DESCRIPTOR.message_types_by_name['BirdPage'] = _BIRDPAGE
@@ -260,6 +292,13 @@ DESCRIPTOR.message_types_by_name['Confirmation'] = _CONFIRMATION
 DESCRIPTOR.message_types_by_name['UserInfo'] = _USERINFO
 DESCRIPTOR.message_types_by_name['UserLogin'] = _USERLOGIN
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+ServerInfo = _reflection.GeneratedProtocolMessageType('ServerInfo', (_message.Message,), {
+  'DESCRIPTOR' : _SERVERINFO,
+  '__module__' : 'birdwiki_pb2'
+  # @@protoc_insertion_point(class_scope:ServerInfo)
+  })
+_sym_db.RegisterMessage(ServerInfo)
 
 BirdName = _reflection.GeneratedProtocolMessageType('BirdName', (_message.Message,), {
   'DESCRIPTOR' : _BIRDNAME,
@@ -311,13 +350,22 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=283,
-  serialized_end=479,
+  serialized_start=314,
+  serialized_end=632,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='greeting',
+    full_name='BirdWiki.greeting',
+    index=0,
+    containing_service=None,
+    input_type=_SERVERINFO,
+    output_type=_CONFIRMATION,
+    serialized_options=None,
+  ),
   _descriptor.MethodDescriptor(
     name='listBirds',
     full_name='BirdWiki.listBirds',
-    index=0,
+    index=1,
     containing_service=None,
     input_type=_BIRDNAME,
     output_type=_BIRDINFO,
@@ -326,7 +374,16 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='getBird',
     full_name='BirdWiki.getBird',
-    index=1,
+    index=2,
+    containing_service=None,
+    input_type=_BIRDNAME,
+    output_type=_BIRDINFO,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='createBird',
+    full_name='BirdWiki.createBird',
+    index=3,
     containing_service=None,
     input_type=_BIRDNAME,
     output_type=_BIRDINFO,
@@ -335,7 +392,7 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='readBird',
     full_name='BirdWiki.readBird',
-    index=2,
+    index=4,
     containing_service=None,
     input_type=_BIRDNAME,
     output_type=_BIRDPAGE,
@@ -344,7 +401,7 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='editBird',
     full_name='BirdWiki.editBird',
-    index=3,
+    index=5,
     containing_service=None,
     input_type=_BIRDNAME,
     output_type=_BIRDPAGE,
@@ -353,9 +410,18 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='saveBird',
     full_name='BirdWiki.saveBird',
-    index=4,
+    index=6,
     containing_service=None,
     input_type=_BIRDPAGE,
+    output_type=_CONFIRMATION,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='deleteBird',
+    full_name='BirdWiki.deleteBird',
+    index=7,
+    containing_service=None,
+    input_type=_BIRDNAME,
     output_type=_CONFIRMATION,
     serialized_options=None,
   ),
@@ -371,8 +437,8 @@ _LOGINUSER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=481,
-  serialized_end=526,
+  serialized_start=634,
+  serialized_end=679,
   methods=[
   _descriptor.MethodDescriptor(
     name='login',

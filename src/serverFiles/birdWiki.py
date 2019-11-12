@@ -5,10 +5,10 @@ from grpcFiles import birdwiki_pb2
 from grpcFiles import birdwiki_pb2_grpc
 from db.bird.birdDb import BirdDB
 
-from classes.serverState import saveBird, getBird, getBirds, updateBird, initDB, initState, createLog, createSnapshot
+from classes.serverState import saveBird, getBird, getBirds, createBird, updateBird, deleteBird, initDB, initState, createLog, createSnapshot
+import serverClient as delegate
+from env import NODE_QT, SERVER_QT
 
-NODE_QT = 8
-SERVER_QT = 3
 SERVER_ID = 0
 
 
@@ -23,25 +23,8 @@ def checkServer(name):
     return birdHash(name) == SERVER_ID
 
 
-def get_server_request(name, addrs):
-    port = 5000 + birdHash(name)
-    print(f'Delegating {addrs}, {name}, {port}')
-
-    try:
-        port = [candidate for candidate in addrs if candidate >= port][0]
-    except:
-        port = addrs[0]
-    port = 5000
-    with grpc.insecure_channel('localhost:'+str(port)) as channel:
-        print(f'Not my problem, calling neighbour {port}')
-        stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
-        response = stub.readBird(birdwiki_pb2.BirdName(name=name))
-        return response
-
-
 def broadcast():
     list_neigh = []
-    global SERVER_ID
     for i in range(NODE_QT):
         if i == SERVER_ID:
             continue
@@ -49,13 +32,18 @@ def broadcast():
         try:
             with grpc.insecure_channel('localhost:'+str(port)) as channel:
                 stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
-                response = stub.listBirds(birdwiki_pb2.BirdName())
-                print(response)
-                for _ in response:
-                    pass
-                list_neigh.append(port)
+                response = stub.greeting(
+                    birdwiki_pb2.ServerInfo(serverId=SERVER_ID))
+
+                if (response.flag == True):
+                    print("SERVER", port, "RESPONDED GREETING")
+                    list_neigh.append(port)
+
+                else:
+                    raise Exception
+
         except Exception as e:
-            print(f'Server witth port {port} not found. Reason: {e}')
+            print(f'Server witth port {port} not found.')
 
     print(f'My neighbours: {list_neigh}')
     return list_neigh
@@ -82,14 +70,11 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
             createSnapshot(0)
             initState(0)
 
-    def listBirds(self, request, context):
-        print("REQUEST IS TO LIST BIRD(S)", request)
-        birdList = getBirds()
-        for birdKey in birdList:
-            bird = birdList[birdKey]
-            yield birdwiki_pb2.BirdInfo(name=bird['name'],
-                                           editing=bird['editing'],
-                                           text=bird['text'])
+    def greeting(self, request, context):
+        print("RECIVED GREETING FROM SERVER", request.serverId)
+        self.neighbours.append(5000 + request.serverId)
+        print(f'My neighbours: {self.neighbours}')
+        return birdwiki_pb2.Confirmation(flag=True)
 
     def getBird(self, request, context):
         print("REQUEST IS TO GET BIRD ", request.name)
@@ -97,31 +82,59 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
             bird = getBird(request.name)
             if (bird and bird['name']):
                 return birdwiki_pb2.BirdInfo(name=bird['name'],
-                                                editing=bird['editing'],
-                                                text=bird['text'])
+                                             editing=bird['editing'],
+                                             text=bird['text'])
             return birdwiki_pb2.BirdInfo()
         else:
-            return get_server_request(request.name, self.neighbours)
+            return delegate.getBird(request, self.neighbours)
+
+    def createBird(self, request, context):
+        print("REQUEST IS TO CREATE BIRD ", request.name)
+        if (checkServer(request.name)):
+            bird = createBird(request.name)
+            if (bird and bird['name']):
+                return birdwiki_pb2.BirdInfo(name=bird['name'],
+                                             editing=bird['editing'],
+                                             text=bird['text'])
+            return birdwiki_pb2.BirdInfo()
+        else:
+            return delegate.createBird(request, self.neighbours)
 
     def readBird(self, request, context):
         print("REQUEST IS TO READ ", request.name)
-        content = getBird(request.name)["text"]
-        if (content):
-            return birdwiki_pb2.BirdPage(name=request.name, text=content)
-        return birdwiki_pb2.BirdPage()
+        if (checkServer(request.name)):
+            content = getBird(request.name)["text"]
+            if (content):
+                return birdwiki_pb2.BirdPage(name=request.name, text=content)
+            return birdwiki_pb2.BirdPage()
+        else:
+            return delegate.readBird(request, self.neighbours)
 
     def editBird(self, request, context):
         print("REQUEST IS TO EDIT ", request.name)
         changeEdit = updateBird(request.name, True)
-
-        if (changeEdit == True):
-            content = getBird(request.name)["text"]
-            if (content):
-                return birdwiki_pb2.BirdPage(name=request.name, text=content)
-        return birdwiki_pb2.BirdPage()
+        if (checkServer(request.name)):
+            if (changeEdit == True):
+                content = getBird(request.name)["text"]
+                if (content):
+                    return birdwiki_pb2.BirdPage(name=request.name, text=content)
+            return birdwiki_pb2.BirdPage()
+        else:
+            return delegate.editBird(request, self.neighbours)
 
     def saveBird(self, request, context):
         print("REQUEST IS TO SAVE ", request.name)
         changeEdit = updateBird(request.name, False)
-        result = saveBird(request.name, request.text)
-        return birdwiki_pb2.Confirmation(saved=result)
+        if (checkServer(request.name)):
+            result = saveBird(request.name, request.text)
+            return birdwiki_pb2.Confirmation(flag=result)
+        else:
+            return delegate.saveBird(request, self.neighbours)
+
+    def deleteBird(self, request, context):
+        print("REQUEST IS TO DELETE ", request.name)
+        if (checkServer(request.name)):
+            result = deleteBird(request.name)
+            return birdwiki_pb2.Confirmation(flag=result)
+        else:
+            return delegate.deleteBird(request, self.neighbours)

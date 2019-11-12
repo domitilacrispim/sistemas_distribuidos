@@ -53,6 +53,43 @@ def endState():
     endSnapshot()
 
 
+def getBirds():
+    global state
+    return state.birds
+
+
+def getBird(name):
+    try:
+        global state
+        bird = state.birds[name]
+        return bird
+    except:
+        return None
+
+
+def createBird(name):
+    try:
+        global state
+        bird = {
+            "name": name,
+            "text": "",
+            "editing": False
+        }
+        state.birds[name] = bird
+        return bird
+    except:
+        return None
+
+
+def updateBird(name, editing):
+    try:
+        bird = state.birds[name]
+        bird["editing"] = editing
+        return True
+    except:
+        return False
+
+
 def saveBird(name, text):
     print('SAVING EDIT TO LOG')
     logging.debug('{"name": "' + name + '", "text": "' + text + '"},')
@@ -65,21 +102,10 @@ def saveBird(name, text):
         return False
 
 
-def getBird(name):
-    global state
-    bird = state.birds[name]
-    return bird
-
-
-def getBirds():
-    global state
-    return state.birds
-
-
-def updateBird(name, editing):
+def deleteBird(name):
     try:
-        bird = state.birds[name]
-        bird["editing"] = editing
+        global state
+        state.birds.pop(name)
         return True
     except:
         return False

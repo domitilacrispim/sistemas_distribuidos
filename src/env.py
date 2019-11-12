@@ -1,0 +1,2 @@
+NODE_QT = 4
+SERVER_QT = 3

@@ -1,21 +1,37 @@
+/*	
+    PARA COMPILAR USE O COMANDO (NA PASTA src/grpcFiles)	
+    python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. birdwiki.proto	
+    	
+    NO ARQUIVO loginuser_pb2_grpc MUDE A LINHA 4 PARA 	
+      from grpcFiles import loginuser_pb2 as loginuser__pb2  	
+*/	
+
+
 syntax = "proto3";
 
 service BirdWiki {
+  rpc greeting(ServerInfo) returns (Confirmation) {}
 
   rpc listBirds(BirdName) returns (stream BirdInfo) {}
 
   rpc getBird(BirdName) returns (BirdInfo) {}
 
+  rpc createBird(BirdName) returns (BirdInfo) {}
+
   rpc readBird(BirdName) returns (BirdPage) {}
-  
+
   rpc editBird(BirdName) returns (BirdPage) {}
 
   rpc saveBird(BirdPage) returns (Confirmation) {}
+
+  rpc deleteBird(BirdName) returns (Confirmation) {}
 }
 
 service LoginUser {
-    rpc login (UserLogin) returns (UserInfo) {}
+  rpc login(UserLogin) returns (UserInfo) {}
 }
+
+message ServerInfo { int32 serverId = 1; }
 
 message BirdName { string name = 1; }
 
@@ -30,15 +46,15 @@ message BirdPage {
   string text = 2;
 }
 
-message Confirmation { bool saved = 1; }
+message Confirmation { bool flag = 1; }
 
 message UserInfo {
-    string crBio = 1;
-    string name = 2;
-    string password_hash = 3;
+  string crBio = 1;
+  string name = 2;
+  string password_hash = 3;
 }
 
 message UserLogin {
-    string crBio = 1;
-    string password = 2;
+  string crBio = 1;
+  string password = 2;
 }

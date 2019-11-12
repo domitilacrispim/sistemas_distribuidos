@@ -14,6 +14,11 @@ class BirdWikiStub(object):
         Args:
           channel: A grpc.Channel.
         """
+        self.greeting = channel.unary_unary(
+            '/BirdWiki/greeting',
+            request_serializer=birdwiki__pb2.ServerInfo.SerializeToString,
+            response_deserializer=birdwiki__pb2.Confirmation.FromString,
+        )
         self.listBirds = channel.unary_stream(
             '/BirdWiki/listBirds',
             request_serializer=birdwiki__pb2.BirdName.SerializeToString,
@@ -21,6 +26,11 @@ class BirdWikiStub(object):
         )
         self.getBird = channel.unary_unary(
             '/BirdWiki/getBird',
+            request_serializer=birdwiki__pb2.BirdName.SerializeToString,
+            response_deserializer=birdwiki__pb2.BirdInfo.FromString,
+        )
+        self.createBird = channel.unary_unary(
+            '/BirdWiki/createBird',
             request_serializer=birdwiki__pb2.BirdName.SerializeToString,
             response_deserializer=birdwiki__pb2.BirdInfo.FromString,
         )
@@ -39,11 +49,23 @@ class BirdWikiStub(object):
             request_serializer=birdwiki__pb2.BirdPage.SerializeToString,
             response_deserializer=birdwiki__pb2.Confirmation.FromString,
         )
+        self.deleteBird = channel.unary_unary(
+            '/BirdWiki/deleteBird',
+            request_serializer=birdwiki__pb2.BirdName.SerializeToString,
+            response_deserializer=birdwiki__pb2.Confirmation.FromString,
+        )
 
 
 class BirdWikiServicer(object):
     # missing associated documentation comment in .proto file
     pass
+
+    def greeting(self, request, context):
+        # missing associated documentation comment in .proto file
+        pass
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def listBirds(self, request, context):
         # missing associated documentation comment in .proto file
@@ -53,6 +75,13 @@ class BirdWikiServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def getBird(self, request, context):
+        # missing associated documentation comment in .proto file
+        pass
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createBird(self, request, context):
         # missing associated documentation comment in .proto file
         pass
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -80,9 +109,21 @@ class BirdWikiServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def deleteBird(self, request, context):
+        # missing associated documentation comment in .proto file
+        pass
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BirdWikiServicer_to_server(servicer, server):
     rpc_method_handlers = {
+        'greeting': grpc.unary_unary_rpc_method_handler(
+            servicer.greeting,
+            request_deserializer=birdwiki__pb2.ServerInfo.FromString,
+            response_serializer=birdwiki__pb2.Confirmation.SerializeToString,
+        ),
         'listBirds': grpc.unary_stream_rpc_method_handler(
             servicer.listBirds,
             request_deserializer=birdwiki__pb2.BirdName.FromString,
@@ -90,6 +131,11 @@ def add_BirdWikiServicer_to_server(servicer, server):
         ),
         'getBird': grpc.unary_unary_rpc_method_handler(
             servicer.getBird,
+            request_deserializer=birdwiki__pb2.BirdName.FromString,
+            response_serializer=birdwiki__pb2.BirdInfo.SerializeToString,
+        ),
+        'createBird': grpc.unary_unary_rpc_method_handler(
+            servicer.createBird,
             request_deserializer=birdwiki__pb2.BirdName.FromString,
             response_serializer=birdwiki__pb2.BirdInfo.SerializeToString,
         ),
@@ -106,6 +152,11 @@ def add_BirdWikiServicer_to_server(servicer, server):
         'saveBird': grpc.unary_unary_rpc_method_handler(
             servicer.saveBird,
             request_deserializer=birdwiki__pb2.BirdPage.FromString,
+            response_serializer=birdwiki__pb2.Confirmation.SerializeToString,
+        ),
+        'deleteBird': grpc.unary_unary_rpc_method_handler(
+            servicer.deleteBird,
+            request_deserializer=birdwiki__pb2.BirdName.FromString,
             response_serializer=birdwiki__pb2.Confirmation.SerializeToString,
         ),
     }
