@@ -5,9 +5,9 @@ import json
 import os
 from db.bird.birdDb import BirdDB, FN
 from utils.crudEnum import CrudEnum
+from env import INTERVAL_MEMORY_TO_DB, INTERVAL_DB_TO_SNAPSHOT
 
-INTERVAL_MEMORY_TO_DB = 60
-INTERVAL_DB_TO_SNAPSHOT = 300
+
 SNAPSHOT_FILE = 'snapshot_{id}.txt'
 LOG_FILE = 'log_{id}.txt'
 
@@ -24,6 +24,8 @@ class ServerState():
         print("COPYING DATA BASE TO MEMORY")
         self.birds = BirdDB().getBirds()
 
+# STATE FUNCS
+
 
 def save_state_thread():
     global state
@@ -32,8 +34,9 @@ def save_state_thread():
     while running:
         try:
             time.sleep(INTERVAL_MEMORY_TO_DB)
-            print("COPYING MEMORY DATA TO DATABASE")
-            BirdDB().writeBirds(state.birds)
+            if (running):
+                print("COPYING MEMORY DATA TO DATABASE")
+                BirdDB().writeBirds(state.birds)
         except KeyboardInterrupt:
             break
 
@@ -54,6 +57,7 @@ def endState():
     endSnapshot()
 
 
+# BIRD FUNCS
 def getBirds():
     global state
     return state.birds
@@ -121,19 +125,22 @@ def deleteBird(name):
         return False
 
 
+# SNAPSHOT FUNCS
 def saveSnapshot(id):
 
     global running
     while running:
         try:
             time.sleep(INTERVAL_DB_TO_SNAPSHOT)
-            createSnapshot(id)
+            if (running):
+                createSnapshot(id)
 
         except KeyboardInterrupt:
             break
 
-        createLog(id)
-        id += 1
+        if (running):
+            createLog(id)
+            id += 1
 
 
 def createSnapshot(id):
@@ -165,6 +172,13 @@ def initSnapshot():
     state_thread.start()
 
 
+def endSnapshot():
+    print("END SNAPSHOT THREAD")
+    global running
+    running = False
+
+
+# DB FUNCS
 def initDB(filename):
     print("LOADING ", filename, "INTO DATABASE")
     file = open(filename, "r")
@@ -180,12 +194,7 @@ def initDB(filename):
     executeLog()
 
 
-def endSnapshot():
-    print("END SNAPSHOT THREAD")
-    global running
-    running = False
-
-
+# LOG FUNCS
 def createLog(id):
     file_hander = logging.FileHandler(LOG_FILE.replace('{id}', str(id)), 'w+')
 

@@ -93,7 +93,7 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
         except:
             createLog(0)
             createSnapshot(0)
-            initState(0)
+            initState(1)
 
     def greeting(self, request, context):
         print("RECIVED GREETING FROM SERVER", request.serverId)
