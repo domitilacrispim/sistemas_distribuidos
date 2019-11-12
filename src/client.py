@@ -7,9 +7,6 @@ import grpc
 from grpcFiles import birdwiki_pb2
 from grpcFiles import birdwiki_pb2_grpc
 
-from grpcFiles import loginuser_pb2
-from grpcFiles import loginuser_pb2_grpc
-
 from classes.editor import EditorWindow
 
 user = ''
@@ -27,7 +24,7 @@ def login(stub):
         crBio = input("crBio: ")
         password = input("Senha: ")
 
-        response = stub.login(loginuser_pb2.UserLogin(
+        response = stub.login(birdwiki_pb2.UserLogin(
             crBio=crBio, password=password))
 
         if not response.crBio:
@@ -108,7 +105,7 @@ def editBird(stub, bird):
 def run():
     with grpc.insecure_channel('localhost:5006') as channel:
         stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
-        login(loginuser_pb2_grpc.LoginUserStub(channel))
+        login(birdwiki_pb2_grpc.LoginUserStub(channel))
 
         while True:
             try:

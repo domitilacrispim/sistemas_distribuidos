@@ -7,7 +7,7 @@ from db.bird.birdDb import BirdDB
 
 from classes.serverState import saveBird, getBird, getBirds, updateBird, initDB, initState, createLog, createSnapshot
 
-NODE_QT = 16
+NODE_QT = 8
 SERVER_QT = 3
 SERVER_ID = 0
 
@@ -88,8 +88,8 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
         for birdKey in birdList:
             bird = birdList[birdKey]
             yield birdwiki_pb2.BirdInfo(name=bird['name'],
-                                        editing=bird['editing'],
-                                        text=bird['text'])
+                                           editing=bird['editing'],
+                                           text=bird['text'])
 
     def getBird(self, request, context):
         print("REQUEST IS TO GET BIRD ", request.name)
@@ -97,8 +97,8 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
             bird = getBird(request.name)
             if (bird and bird['name']):
                 return birdwiki_pb2.BirdInfo(name=bird['name'],
-                                             editing=bird['editing'],
-                                             text=bird['text'])
+                                                editing=bird['editing'],
+                                                text=bird['text'])
             return birdwiki_pb2.BirdInfo()
         else:
             return get_server_request(request.name, self.neighbours)

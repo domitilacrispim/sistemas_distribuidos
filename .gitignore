@@ -4,3 +4,4 @@ __pycache__/
 
 snapshot_*
 log_*
+*.vscode/

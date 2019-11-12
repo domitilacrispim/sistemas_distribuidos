@@ -5,8 +5,8 @@ from grpcFiles import birdwiki_pb2 as birdwiki__pb2
 
 
 class BirdWikiStub(object):
-    """Definição do serviço
-    """
+    # missing associated documentation comment in .proto file
+    pass
 
     def __init__(self, channel):
         """Constructor.
@@ -42,41 +42,40 @@ class BirdWikiStub(object):
 
 
 class BirdWikiServicer(object):
-    """Definição do serviço
-    """
+    # missing associated documentation comment in .proto file
+    pass
 
     def listBirds(self, request, context):
-        """Lista as várias aves com base no nome informado pelo cliente
-        Se não tiver nome, então liste todas
-        """
+        # missing associated documentation comment in .proto file
+        pass
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def getBird(self, request, context):
-        """Recebe requisição para pegar dados da ave
-        """
+        # missing associated documentation comment in .proto file
+        pass
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def readBird(self, request, context):
-        """Retorna a página do passarinho informado pelo cliente
-        """
+        # missing associated documentation comment in .proto file
+        pass
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def editBird(self, request, context):
-        """edita a pagina do passaro
-        """
+        # missing associated documentation comment in .proto file
+        pass
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def saveBird(self, request, context):
-        """Recebe a página do passarinho
-        """
+        # missing associated documentation comment in .proto file
+        pass
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -112,4 +111,46 @@ def add_BirdWikiServicer_to_server(servicer, server):
     }
     generic_handler = grpc.method_handlers_generic_handler(
         'BirdWiki', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+class LoginUserStub(object):
+    # missing associated documentation comment in .proto file
+    pass
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+          channel: A grpc.Channel.
+        """
+        self.login = channel.unary_unary(
+            '/LoginUser/login',
+            request_serializer=birdwiki__pb2.UserLogin.SerializeToString,
+            response_deserializer=birdwiki__pb2.UserInfo.FromString,
+        )
+
+
+class LoginUserServicer(object):
+    # missing associated documentation comment in .proto file
+    pass
+
+    def login(self, request, context):
+        # missing associated documentation comment in .proto file
+        pass
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_LoginUserServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+        'login': grpc.unary_unary_rpc_method_handler(
+            servicer.login,
+            request_deserializer=birdwiki__pb2.UserLogin.FromString,
+            response_serializer=birdwiki__pb2.UserInfo.SerializeToString,
+        ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+        'LoginUser', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))

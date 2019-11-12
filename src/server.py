@@ -4,7 +4,6 @@ import json
 import grpc
 
 from grpcFiles import birdwiki_pb2_grpc
-from grpcFiles import loginuser_pb2_grpc
 
 from serverFiles.birdWiki import BirdWikiServer
 from serverFiles.loginUser import LoginUserServer
@@ -18,9 +17,10 @@ def serve():
         server_port = 5000 + server_id
 
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+
         birdwiki_pb2_grpc.add_BirdWikiServicer_to_server(
             BirdWikiServer(server_id), server)
-        loginuser_pb2_grpc.add_LoginUserServicer_to_server(
+        birdwiki_pb2_grpc.add_LoginUserServicer_to_server(
             LoginUserServer(), server)
 
         server.add_insecure_port('[::]:' + str(server_port))

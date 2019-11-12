@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0e\x62irdwiki.proto\"\x18\n\x08\x42irdName\x12\x0c\n\x04name\x18\x01 \x01(\t\"7\n\x08\x42irdInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x65\x64iting\x18\x02 \x01(\x08\x12\x0c\n\x04text\x18\x04 \x01(\t\"&\n\x08\x42irdPage\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"\x1d\n\x0c\x43onfirmation\x12\r\n\x05saved\x18\x01 \x01(\x08\x32\xc4\x01\n\x08\x42irdWiki\x12%\n\tlistBirds\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x30\x01\x12!\n\x07getBird\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x12\"\n\x08readBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12\"\n\x08\x65\x64itBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12&\n\x08saveBird\x12\t.BirdPage\x1a\r.Confirmation\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0e\x62irdwiki.proto\"\x18\n\x08\x42irdName\x12\x0c\n\x04name\x18\x01 \x01(\t\"7\n\x08\x42irdInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x65\x64iting\x18\x02 \x01(\x08\x12\x0c\n\x04text\x18\x04 \x01(\t\"&\n\x08\x42irdPage\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"\x1d\n\x0c\x43onfirmation\x12\r\n\x05saved\x18\x01 \x01(\x08\">\n\x08UserInfo\x12\r\n\x05\x63rBio\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x15\n\rpassword_hash\x18\x03 \x01(\t\",\n\tUserLogin\x12\r\n\x05\x63rBio\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t2\xc4\x01\n\x08\x42irdWiki\x12%\n\tlistBirds\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x30\x01\x12!\n\x07getBird\x12\t.BirdName\x1a\t.BirdInfo\"\x00\x12\"\n\x08readBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12\"\n\x08\x65\x64itBird\x12\t.BirdName\x1a\t.BirdPage\"\x00\x12&\n\x08saveBird\x12\t.BirdPage\x1a\r.Confirmation\"\x00\x32-\n\tLoginUser\x12 \n\x05login\x12\n.UserLogin\x1a\t.UserInfo\"\x00\x62\x06proto3')
 )
 
 
@@ -170,10 +170,95 @@ _CONFIRMATION = _descriptor.Descriptor(
   serialized_end=170,
 )
 
+
+_USERINFO = _descriptor.Descriptor(
+  name='UserInfo',
+  full_name='UserInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='crBio', full_name='UserInfo.crBio', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='UserInfo.name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='password_hash', full_name='UserInfo.password_hash', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=172,
+  serialized_end=234,
+)
+
+
+_USERLOGIN = _descriptor.Descriptor(
+  name='UserLogin',
+  full_name='UserLogin',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='crBio', full_name='UserLogin.crBio', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='password', full_name='UserLogin.password', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=236,
+  serialized_end=280,
+)
+
 DESCRIPTOR.message_types_by_name['BirdName'] = _BIRDNAME
 DESCRIPTOR.message_types_by_name['BirdInfo'] = _BIRDINFO
 DESCRIPTOR.message_types_by_name['BirdPage'] = _BIRDPAGE
 DESCRIPTOR.message_types_by_name['Confirmation'] = _CONFIRMATION
+DESCRIPTOR.message_types_by_name['UserInfo'] = _USERINFO
+DESCRIPTOR.message_types_by_name['UserLogin'] = _USERLOGIN
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 BirdName = _reflection.GeneratedProtocolMessageType('BirdName', (_message.Message,), {
@@ -204,6 +289,20 @@ Confirmation = _reflection.GeneratedProtocolMessageType('Confirmation', (_messag
   })
 _sym_db.RegisterMessage(Confirmation)
 
+UserInfo = _reflection.GeneratedProtocolMessageType('UserInfo', (_message.Message,), {
+  'DESCRIPTOR' : _USERINFO,
+  '__module__' : 'birdwiki_pb2'
+  # @@protoc_insertion_point(class_scope:UserInfo)
+  })
+_sym_db.RegisterMessage(UserInfo)
+
+UserLogin = _reflection.GeneratedProtocolMessageType('UserLogin', (_message.Message,), {
+  'DESCRIPTOR' : _USERLOGIN,
+  '__module__' : 'birdwiki_pb2'
+  # @@protoc_insertion_point(class_scope:UserLogin)
+  })
+_sym_db.RegisterMessage(UserLogin)
+
 
 
 _BIRDWIKI = _descriptor.ServiceDescriptor(
@@ -212,8 +311,8 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=173,
-  serialized_end=369,
+  serialized_start=283,
+  serialized_end=479,
   methods=[
   _descriptor.MethodDescriptor(
     name='listBirds',
@@ -264,5 +363,29 @@ _BIRDWIKI = _descriptor.ServiceDescriptor(
 _sym_db.RegisterServiceDescriptor(_BIRDWIKI)
 
 DESCRIPTOR.services_by_name['BirdWiki'] = _BIRDWIKI
+
+
+_LOGINUSER = _descriptor.ServiceDescriptor(
+  name='LoginUser',
+  full_name='LoginUser',
+  file=DESCRIPTOR,
+  index=1,
+  serialized_options=None,
+  serialized_start=481,
+  serialized_end=526,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='login',
+    full_name='LoginUser.login',
+    index=0,
+    containing_service=None,
+    input_type=_USERLOGIN,
+    output_type=_USERINFO,
+    serialized_options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_LOGINUSER)
+
+DESCRIPTOR.services_by_name['LoginUser'] = _LOGINUSER
 
 # @@protoc_insertion_point(module_scope)
