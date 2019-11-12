@@ -2,6 +2,7 @@ from __future__ import print_function
 import logging
 import time
 
+import sys
 import grpc
 
 from grpcFiles import birdwiki_pb2
@@ -43,7 +44,7 @@ def chooseBird(stub):
 
     while True:
         # USUARIO ESCOLHE AVE
-        birdName = input("Escolha uma ave ou digite 0 para sair: ")
+        birdName = sys.argv[1]
         if(birdName == "0"):
             raise KeyboardInterrupt
         response = stub.getBird(birdwiki_pb2.BirdName(
@@ -52,7 +53,7 @@ def chooseBird(stub):
         if not response.name:  # NOME DE AVE INVÁLIDO
             print(
                 f'Ave inexistente! \nEscolha uma das opcoes: \n[1] Criar ave "{birdName}" \n[2] Escolher outra ave \n[0] Sair')
-            option = int(input())
+            option = int(sys.argv[2])
 
             if (option == 0):
                 raise KeyboardInterrupt
@@ -82,7 +83,7 @@ def checkBirdAvailability(stub, bird):
         print("\nPássaro já está sendo editado.")
         print(
             "\nEscolha uma das opcoes: \n[1] Abrir para leitura \n[2] Escolher outra ave \n[0] Sair")
-        option = int(input())
+        option = int(sys.argv[2])
 
         if option == 1:
             readBird(stub, bird)
@@ -132,7 +133,7 @@ def run():
                 bird = chooseBird(stub)  # LISTA AS AVES E ESCOLHE UMA
                 print(
                     "Escolha uma das opcoes: \n[1] Abrir para leitura \n[2] Editar \n[3] Deletar \n[0] Sair")
-                option = int(input())
+                option = int(sys.argv[2])
                 if(option == 2):
                     # VERIFICA SE PODE EDITAR AVE ESCOLHIDA
                     checkBirdAvailability(stub, bird)
