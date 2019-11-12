@@ -5,7 +5,7 @@ import grpc
 from grpcFiles import birdwiki_pb2
 from grpcFiles import birdwiki_pb2_grpc
 
-from env import NODE_QT, SERVER_QT
+from env import NODE_QT, SERVER_QT, BASE_SERVER
 
 
 def birdHash(name):
@@ -16,7 +16,7 @@ def birdHash(name):
 
 
 def getServer(name, addrs):
-    port = 5000 + birdHash(name)
+    port = BASE_SERVER + birdHash(name)
 
     try:
         port = [candidate for candidate in addrs if candidate >= port][0]
@@ -76,7 +76,8 @@ def saveBird(request, addrs):
     with grpc.insecure_channel("localhost:" + str(port)) as channel:
         print(f"DELEGATING READ BIRD {name} TO SERVER {port}")
         stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
-        response = stub.saveBird(birdwiki_pb2.BirdPage(name=name, text=request.text))
+        response = stub.saveBird(
+            birdwiki_pb2.BirdPage(name=name, text=request.text))
         return response
 
 

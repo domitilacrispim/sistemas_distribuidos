@@ -10,11 +10,13 @@ from serverFiles.loginUser import LoginUserServer
 
 from classes.serverState import endState
 
+from env import BASE_SERVER
+
 
 def serve():
     try:
         server_id = int(input("Server ID:"))
-        server_port = 5000 + server_id
+        server_port = BASE_SERVER + server_id
 
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 

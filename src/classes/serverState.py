@@ -4,6 +4,7 @@ import logging
 import json
 import os
 from db.bird.birdDb import BirdDB, FN
+from utils.crudEnum import CrudEnum
 
 INTERVAL_MEMORY_TO_DB = 60
 INTERVAL_DB_TO_SNAPSHOT = 300
@@ -76,6 +77,10 @@ def createBird(name):
             "editing": False
         }
         state.birds[name] = bird
+
+        print('SAVING CREATE TO LOG')
+        logging.debug('{"op": "' + CrudEnum.CREATE.name + '", "name": "' +
+                      name + '", "text": ""},')
         return bird
     except:
         return None
@@ -92,7 +97,8 @@ def updateBird(name, editing):
 
 def saveBird(name, text):
     print('SAVING EDIT TO LOG')
-    logging.debug('{"name": "' + name + '", "text": "' + text + '"},')
+    logging.debug('{"op": "' + CrudEnum.UPDATE.name + '", "name": "' +
+                  name + '", "text": "' + text + '"},')
     global state
     try:
         bird = state.birds[name]
@@ -106,6 +112,10 @@ def deleteBird(name):
     try:
         global state
         state.birds.pop(name)
+
+        print('SAVING DELETE TO LOG')
+        logging.debug('{"op": "' + CrudEnum.DELETE.name + '", "name": "' +
+                      name + '", "text": ""},')
         return True
     except:
         return False
@@ -215,9 +225,19 @@ def executeLog():
         for log in edit_log:
             try:
                 log_dict = json.loads(log)
+                op = log_dict['op']
                 birdName = log_dict['name']
-                bird = state.birds[birdName]
-                bird['text'] = log_dict['text']
+                birdText = log_dict['text']
+
+                if (op == CrudEnum.UPDATE.name):
+                    bird = state.birds[birdName]
+                    bird['text'] = log_dict['text']
+
+                elif (op == CrudEnum.CREATE.name):
+                    createBird(birdName)
+
+                elif (op == CrudEnum.DELETE.name):
+                    deleteBird(birdName)
             except:
                 pass
 

@@ -18,10 +18,9 @@ from classes.serverState import (
     createSnapshot,
 )
 import serverClient as delegate
-from env import NODE_QT, SERVER_QT
+from env import NODE_QT, SERVER_QT, BASE_SERVER
 
 SERVER_ID = 0
-BASE_SERVER = 5000
 
 
 def birdHash(name):
@@ -39,12 +38,12 @@ def checkServer(name, neighbours):
     servers = neighbours.copy()
     servers.append(SERVER_ID + BASE_SERVER)
     servers.sort()
-    cand_servers = [neigh % BASE_SERVER for neigh in servers if neigh % BASE_SERVER >= hashval]
+    cand_servers = [
+        neigh % BASE_SERVER for neigh in servers if neigh % BASE_SERVER >= hashval]
     if len(cand_servers) == 0:
         cand_servers.append(servers[0])
 
-    return cand_servers[0] % BASE_SERVER
-     == SERVER_ID
+    return cand_servers[0] % BASE_SERVER == SERVER_ID
 
 
 def broadcast():
@@ -52,11 +51,12 @@ def broadcast():
     for i in range(NODE_QT):
         if i == SERVER_ID:
             continue
-        port = 5000 + i
+        port = BASE_SERVER + i
         try:
             with grpc.insecure_channel("localhost:" + str(port)) as channel:
                 stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
-                response = stub.greeting(birdwiki_pb2.ServerInfo(serverId=SERVER_ID))
+                response = stub.greeting(
+                    birdwiki_pb2.ServerInfo(serverId=SERVER_ID))
 
                 if response.flag == True:
                     print("SERVER", port, "RESPONDED GREETING")
@@ -97,7 +97,7 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
 
     def greeting(self, request, context):
         print("RECIVED GREETING FROM SERVER", request.serverId)
-        self.neighbours.append(5000 + request.serverId)
+        self.neighbours.append(BASE_SERVER + request.serverId)
         print(f"My neighbours: {self.neighbours}")
         return birdwiki_pb2.Confirmation(flag=True)
 
