@@ -5,22 +5,46 @@ from grpcFiles import birdwiki_pb2
 from grpcFiles import birdwiki_pb2_grpc
 from db.bird.birdDb import BirdDB
 
-from classes.serverState import saveBird, getBird, getBirds, createBird, updateBird, deleteBird, initDB, initState, createLog, createSnapshot
+from classes.serverState import (
+    saveBird,
+    getBird,
+    getBirds,
+    createBird,
+    updateBird,
+    deleteBird,
+    initDB,
+    initState,
+    createLog,
+    createSnapshot,
+)
 import serverClient as delegate
 from env import NODE_QT, SERVER_QT
 
 SERVER_ID = 0
+BASE_SERVER = 5000
 
 
 def birdHash(name):
     id = 0
     for c in name:
-        id = id+(ord(c))*1661789
+        id = id + (ord(c)) * 1661789
     return id % NODE_QT
 
 
-def checkServer(name):
-    return birdHash(name) == SERVER_ID
+def checkServer(name, neighbours):
+    if birdHash(name) == SERVER_ID:
+        return True
+
+    hashval = birdHash(name)
+    servers = neighbours.copy()
+    servers.append(SERVER_ID + BASE_SERVER)
+    servers.sort()
+    cand_servers = [neigh % BASE_SERVER for neigh in servers if neigh % BASE_SERVER >= hashval]
+    if len(cand_servers) == 0:
+        cand_servers.append(servers[0])
+
+    return cand_servers[0] % BASE_SERVER
+     == SERVER_ID
 
 
 def broadcast():
@@ -28,14 +52,13 @@ def broadcast():
     for i in range(NODE_QT):
         if i == SERVER_ID:
             continue
-        port = 5000+i
+        port = 5000 + i
         try:
-            with grpc.insecure_channel('localhost:'+str(port)) as channel:
+            with grpc.insecure_channel("localhost:" + str(port)) as channel:
                 stub = birdwiki_pb2_grpc.BirdWikiStub(channel)
-                response = stub.greeting(
-                    birdwiki_pb2.ServerInfo(serverId=SERVER_ID))
+                response = stub.greeting(birdwiki_pb2.ServerInfo(serverId=SERVER_ID))
 
-                if (response.flag == True):
+                if response.flag == True:
                     print("SERVER", port, "RESPONDED GREETING")
                     list_neigh.append(port)
 
@@ -43,26 +66,28 @@ def broadcast():
                     raise Exception
 
         except Exception as e:
-            print(f'Server witth port {port} not found.')
+            print(f"Server witth port {port} not found.")
 
-    print(f'My neighbours: {list_neigh}')
+    print(f"My neighbours: {list_neigh}")
     return list_neigh
 
 
 class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
-
     def __init__(self, server_id):
-        print('STARTING SERVER')
+        print("STARTING SERVER")
         files = os.listdir()
         global SERVER_ID
         SERVER_ID = server_id
         self.neighbours = broadcast()
 
         try:
-            files = [int(file.split('_')[1].split('.')[0])
-                     for file in files if file.startswith('snapshot_')]
+            files = [
+                int(file.split("_")[1].split(".")[0])
+                for file in files
+                if file.startswith("snapshot_")
+            ]
             id = max(files)
-            snapshot_file = 'snapshot_' + str(max(files)) + '.txt'
+            snapshot_file = "snapshot_" + str(max(files)) + ".txt"
             initState(id + 1)
             initDB(snapshot_file)
         except:
@@ -73,38 +98,38 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
     def greeting(self, request, context):
         print("RECIVED GREETING FROM SERVER", request.serverId)
         self.neighbours.append(5000 + request.serverId)
-        print(f'My neighbours: {self.neighbours}')
+        print(f"My neighbours: {self.neighbours}")
         return birdwiki_pb2.Confirmation(flag=True)
 
     def getBird(self, request, context):
         print("REQUEST IS TO GET BIRD ", request.name)
-        if (checkServer(request.name)):
+        if checkServer(request.name, self.neighbours):
             bird = getBird(request.name)
-            if (bird and bird['name']):
-                return birdwiki_pb2.BirdInfo(name=bird['name'],
-                                             editing=bird['editing'],
-                                             text=bird['text'])
+            if bird and bird["name"]:
+                return birdwiki_pb2.BirdInfo(
+                    name=bird["name"], editing=bird["editing"], text=bird["text"]
+                )
             return birdwiki_pb2.BirdInfo()
         else:
             return delegate.getBird(request, self.neighbours)
 
     def createBird(self, request, context):
         print("REQUEST IS TO CREATE BIRD ", request.name)
-        if (checkServer(request.name)):
+        if checkServer(request.name, self.neighbours):
             bird = createBird(request.name)
-            if (bird and bird['name']):
-                return birdwiki_pb2.BirdInfo(name=bird['name'],
-                                             editing=bird['editing'],
-                                             text=bird['text'])
+            if bird and bird["name"]:
+                return birdwiki_pb2.BirdInfo(
+                    name=bird["name"], editing=bird["editing"], text=bird["text"]
+                )
             return birdwiki_pb2.BirdInfo()
         else:
             return delegate.createBird(request, self.neighbours)
 
     def readBird(self, request, context):
         print("REQUEST IS TO READ ", request.name)
-        if (checkServer(request.name)):
+        if checkServer(request.name, self.neighbours):
             content = getBird(request.name)["text"]
-            if (content):
+            if content:
                 return birdwiki_pb2.BirdPage(name=request.name, text=content)
             return birdwiki_pb2.BirdPage()
         else:
@@ -113,10 +138,10 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
     def editBird(self, request, context):
         print("REQUEST IS TO EDIT ", request.name)
         changeEdit = updateBird(request.name, True)
-        if (checkServer(request.name)):
-            if (changeEdit == True):
+        if checkServer(request.name, self.neighbours):
+            if changeEdit == True:
                 content = getBird(request.name)["text"]
-                if (content):
+                if content:
                     return birdwiki_pb2.BirdPage(name=request.name, text=content)
             return birdwiki_pb2.BirdPage()
         else:
@@ -125,7 +150,7 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
     def saveBird(self, request, context):
         print("REQUEST IS TO SAVE ", request.name)
         changeEdit = updateBird(request.name, False)
-        if (checkServer(request.name)):
+        if checkServer(request.name, self.neighbours):
             result = saveBird(request.name, request.text)
             return birdwiki_pb2.Confirmation(flag=result)
         else:
@@ -133,7 +158,7 @@ class BirdWikiServer(birdwiki_pb2_grpc.BirdWikiServicer):
 
     def deleteBird(self, request, context):
         print("REQUEST IS TO DELETE ", request.name)
-        if (checkServer(request.name)):
+        if checkServer(request.name, self.neighbours):
             result = deleteBird(request.name)
             return birdwiki_pb2.Confirmation(flag=result)
         else:
