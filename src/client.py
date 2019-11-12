@@ -147,7 +147,10 @@ def run():
                 print("Goodbye")
                 channel.unsubscribe(close)
                 exit()
-
+            except  grpc.RpcError:
+                print("Server failed")
+                channel.unsubscribe(close)
+                exit()
 
 def close(channel):
     channel.close()
